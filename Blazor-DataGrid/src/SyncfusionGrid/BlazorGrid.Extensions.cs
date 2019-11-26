@@ -25,6 +25,14 @@ namespace ZeraSystems.Syncfusion.Grid
                    //General.SetValue("TValue", schemaItem.TableName) + ")";
         }
 
+        public static string ColumnPrimary(this ISchemaItem schemaItem)
+        {
+            if (schemaItem.IsPrimaryKey)
+                return _space + "IsPrimary="+"true".AddQuotes() + " AllowEditing="+"false".AddQuotes();
+            else
+                return "";
+        }
+
         public static string ColumnHeader(this ISchemaItem schemaItem)
         {
             return _space + "HeaderText=" + schemaItem.ColumnLabel.AddQuotes();

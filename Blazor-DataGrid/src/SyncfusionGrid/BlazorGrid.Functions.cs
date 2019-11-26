@@ -85,7 +85,7 @@ namespace ZeraSystems.Syncfusion.Grid
             foreach (var item in _columns)
             {
                 x++;
-                var properties = item.ColumnField() + item.ColumnHeader() + item.ColumnWidth(150) + item.Alignment();
+                var properties = item.ColumnField() + item.ColumnPrimary() + item.ColumnHeader() + item.ColumnWidth(150) + item.Alignment();
                 var row = General.CreateRow("GridColumn", properties);
                 BuildSnippet(row.AddCarriage(), indent, true);
             }
@@ -132,6 +132,12 @@ namespace ZeraSystems.Syncfusion.Grid
             //var result = SetValue("DataSource","@GridData");
             var result = General.SetValue("@ref", "@Grid");
             result += General.SetValue("TValue",_table);
+            result += General.SetValue("Toolbar", "@(new List<string> {"+
+                                                  "Add".AddQuotes()+","+
+                                                  "Edit".AddQuotes()+","+
+                                                  "Delete".AddQuotes()+","+
+                                                  "Update".AddQuotes()+","+
+                                                  "Cancel".AddQuotes()+" })");
 
             if (setSettings)
             {
