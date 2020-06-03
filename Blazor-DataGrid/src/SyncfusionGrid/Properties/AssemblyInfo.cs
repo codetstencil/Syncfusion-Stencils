@@ -7,12 +7,12 @@ using System.Runtime.InteropServices;
 // associated with an assembly.  
 [assembly: AssemblyTitle("Syncfusion Grid Stencil")]
 [assembly: AssemblyDescription("Code Nanite for Syncfusion's Blazor Grid Component")]
-[assembly: AssemblyConfiguration("[%ASSEMBLY_CONFIG%]")]  
+[assembly: AssemblyConfiguration("")]  
 [assembly: AssemblyCompany("ZERA Systems Inc.")]
 [assembly: AssemblyProduct("CodeStencil Code Nanites")]  
 [assembly: AssemblyCopyright("Copyright �  2019")]
-[assembly: AssemblyTrademark("[%ASSEMBLY_TRADEMARK%]")]  
-[assembly: AssemblyCulture("[%ASSEMBLY_CULTURE%]")]  
+[assembly: AssemblyTrademark("")]  
+[assembly: AssemblyCulture("")]  
   
 // Setting ComVisible to false makes the types in this assembly not visible   
 // to COM components.  If you need to access a type in this assembly from   
