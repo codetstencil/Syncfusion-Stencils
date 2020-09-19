@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeNaniteAssemblies>  
+  <AssemblyLoadPath>D:\Custom Stencils\3rd Party Stencils\Syncfusion\Blazor-DataGrid\SyncfusionGrid\Assemblies\ZeraSystems.Syncfusion.Core.dll</AssemblyLoadPath>  
+  <AssemblyLoadPath>D:\Custom Stencils\3rd Party Stencils\Syncfusion\Blazor-DataGrid\SyncfusionGrid\Assemblies\ZeraSystems.Syncfusion.Grid.dll</AssemblyLoadPath>  
+  <AssemblyLoadPath>D:\Custom Stencils\3rd Party Stencils\Syncfusion\Blazor-DataGrid\SyncfusionGrid\Assemblies\ZeraSystems.CodeNanite.Schema.dll</AssemblyLoadPath>  
+  <AssemblyLoadPath>D:\Custom Stencils\3rd Party Stencils\Syncfusion\Blazor-DataGrid\SyncfusionGrid\Assemblies\ZeraSystems.CodeNanite.Expansion.dll</AssemblyLoadPath>  
+</CodeNaniteAssemblies> 

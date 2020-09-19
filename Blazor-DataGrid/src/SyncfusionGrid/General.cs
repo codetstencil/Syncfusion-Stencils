@@ -7,8 +7,10 @@ using ZeraSystems.CodeNanite.Expansion;
 
 namespace ZeraSystems.Syncfusion.Grid
 {
-    public class General
+    public  class General : ExpansionBase
     {
+        public static Dictionary<string, string> GridConfiguration;
+
         public static string CreateRow(string tag, string properties)
         {
             var result = string.Empty;
@@ -62,5 +64,23 @@ namespace ZeraSystems.Syncfusion.Grid
             return " " + property.Trim() + "=" + value.AddQuotes();
         }
 
+        public static string GetConfigValue(string setting)
+        {
+            return General.GridConfiguration.ContainsKey(setting) ? General.GridConfiguration[setting] : null;
+        }
+
+        public static bool ConfigValue(string setting)
+        {
+            var result = false;
+            var value = GetConfigValue(setting);
+
+            if (!value.IsBlank())
+            {
+                value = value.ToLower();
+                if (value == "yes" || value == "true" || value == "1")
+                    result = true;
+            }
+            return result;
+        }
     }
 }

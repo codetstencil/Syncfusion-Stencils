@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 using ZeraSystems.CodeNanite.Expansion;
 using ZeraSystems.CodeStencil.Contracts;
 
@@ -12,24 +11,20 @@ namespace ZeraSystems.Syncfusion.Grid
         private string _table;
         private List<ISchemaItem> _columns;
         private List<ISchemaItem> _sortColumns;
-        private Dictionary<string, string> _gridConfiguration;
+
+        /// <summary>
+        /// Dictionary containing configuration values
+        /// </summary>
+        //private Dictionary<string, string> _gridConfiguration;
         private readonly string _true = "true".AddQuotes() + " ";
-
-        #region Settings
-
-        public bool AllowEditing { get; set; }
-        public bool UseContextMenu { get; set; }
-
-        #endregion Settings
 
         private void MainFunction()
         {
             var settings = GetExpansionString("GRID_SETTINGS");
-            
             if (!settings.IsBlank())
             {
                 var items = settings.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-                _gridConfiguration = items.Select(item => item.Split('='))
+                General.GridConfiguration = items.Select(item => item.Split('='))
                     .ToDictionary(keyValue => keyValue[0], keyValue => keyValue[1], StringComparer.InvariantCultureIgnoreCase);
             }
 
@@ -38,19 +33,20 @@ namespace ZeraSystems.Syncfusion.Grid
             _sortColumns = GetSortColumns(_table);
 
             #region Razor tags
+
             const int indent = 4;
             AppendText();
             AppendText(("<EjsGrid " + DataSourceSettings() + ">"));
 
-            if (_sortColumns.Any() && ConfigValue("AllowSorting"))
+            if (_sortColumns.Any() && General.ConfigValue("AllowSorting"))
                 AppendText(General.Wrap2TagLevels(GridSortColumn(indent * 3), "GridSortSettings", "GridSortColumns", indent + 4));
 
-            AppendText(GridEditSettings(indent ));
+            AppendText(GridEditSettings(indent));
             AppendText(EjsDataManager(indent));
-            AppendText(General.Wrap1TagLevel(GridColumn(indent*2), "GridColumns", indent ));
+            AppendText(General.Wrap1TagLevel(GridColumn(indent * 2), "GridColumns", indent));
             AppendText("</EjsGrid>");
-            #endregion
 
+            #endregion Razor tags
         }
 
         private string ContextMenuString()
@@ -81,10 +77,8 @@ namespace ZeraSystems.Syncfusion.Grid
         private string GridColumn(int indent)
         {
             BuildSnippet(null);
-            var x = 0;
             foreach (var item in _columns)
             {
-                x++;
                 var properties = item.ColumnField() + item.ColumnPrimary() + item.ColumnHeader() + item.ColumnWidth(150) + item.Alignment();
                 var row = General.CreateRow("GridColumn", properties);
                 BuildSnippet(row.AddCarriage(), indent, true);
@@ -95,10 +89,8 @@ namespace ZeraSystems.Syncfusion.Grid
         private string GridSortColumn(int indent)
         {
             BuildSnippet(null);
-            var x = 0;
             foreach (var item in _sortColumns)
             {
-                x++;
                 var properties = item.ColumnSortField() + item.ColumnSortDirection();
                 var row = General.CreateRow("GridSortColumn", properties);
                 BuildSnippet(row.AddCarriage(), indent, true);
@@ -121,63 +113,47 @@ namespace ZeraSystems.Syncfusion.Grid
         private string EjsDataManager(int indent, bool setEditSettings = true)
         {
             BuildSnippet(null);
-            var result = General.SetValue("Url", "/api/"+_table) + General.SetValue("Adaptor", "Adaptors.WebApiAdaptor");
+            var result = General.SetValue("Url", "/api/" + _table) + General.SetValue("Adaptor", "Adaptors.WebApiAdaptor");
             result = General.CreateRow("EjsDataManager", result, indent);
             return result;
         }
 
-
         private string DataSourceSettings(bool setSettings = true)
         {
-            //var result = SetValue("DataSource","@GridData");
-            var result = General.SetValue("@ref", "@Grid");
-            result += General.SetValue("TValue",_table);
-            result += General.SetValue("Toolbar", "@(new List<string> {"+
-                                                  "Add".AddQuotes()+","+
-                                                  "Edit".AddQuotes()+","+
-                                                  "Delete".AddQuotes()+","+
-                                                  "Update".AddQuotes()+","+
-                                                  "Cancel".AddQuotes()+" })");
-
+            var result  = General.SetValue("@ref", "@Grid");
+                result += General.SetValue("ID", _table+"Grid");
+                result += General.SetValue("TValue", _table);
+                result += General.SetValue("Toolbar", "@(new List<string> {" +
+                                                      "Add".AddQuotes() + "," +
+                                                      "Edit".AddQuotes() + "," +
+                                                      "Delete".AddQuotes() + "," +
+                                                      "Update".AddQuotes() + "," +
+                                                      "Cancel".AddQuotes() + "," +
+                                                      "Print".AddQuotes() + " })");
             if (setSettings)
             {
                 BuildSnippet(null);
-                
+
                 //Use Context Menu
-                if (ConfigValue("UseContextMenu"))
+                if (General.ConfigValue("UseContextMenu"))
                     result += ContextMenuString();
 
                 //Use GridLines
-                if (ConfigValue("UseGridLines"))
-                    result += General.SetValue("GridLines","GridLine.Both");
+                if (General.ConfigValue("UseGridLines"))
+                    result += General.SetValue("GridLines", "GridLine.Both");
 
                 //Use Grouping
-                if (ConfigValue("AllowGrouping"))
+                if (General.ConfigValue("AllowGrouping"))
                     result += General.SetValue("AllowGrouping");
 
-                result = (result + General.SetValue("AllowPaging")); 
+                //Use EnablePersistence
+                if (General.ConfigValue("EnablePersistence"))
+                    result += General.SetValue("EnablePersistence");
+
+                result = (result + General.SetValue("AllowPaging"));
             }
             return result;
         }
 
-        private string GetConfigValue(string setting)
-        {
-            return _gridConfiguration.ContainsKey(setting) ? _gridConfiguration[setting] : null;
-        }
-
-
-        private bool ConfigValue(string setting)
-        {
-            var result = false;
-            var value = GetConfigValue(setting);
-
-            if (!value.IsBlank())
-            {
-                value = value.ToLower();
-                if (value == "yes" || value == "true" || value == "1")
-                    result = true;
-            }
-            return result;
-        }
     }
 }
